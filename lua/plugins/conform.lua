@@ -12,6 +12,7 @@ return {
       ["less"] = { "prettier" },
       ["html"] = { "prettier" },
       ["json"] = { "prettier" },
+      ["rust"] = { "rustfmt" },
     },
   },
 }
