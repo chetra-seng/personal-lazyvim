@@ -13,6 +13,7 @@ return {
       ["html"] = { "prettier" },
       ["json"] = { "prettier" },
       ["rust"] = { "rustfmt" },
+      ["beancount"] = { "bean-format" },
     },
   },
 }
