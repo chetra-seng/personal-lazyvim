@@ -49,7 +49,7 @@ return {
       -- Optional, default tags to add to each new daily note created.
       default_tags = { "daily-notes" },
       -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
-      template = "daily.md"
+      template = "daily.md",
     },
 
     -- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
@@ -70,20 +70,20 @@ return {
         end,
         opts = { noremap = false, expr = true, buffer = true },
       },
-      -- Toggle check-boxes.
-      ["<leader>ch"] = {
-        action = function()
-          return require("obsidian").util.toggle_checkbox()
-        end,
-        opts = { buffer = true },
-      },
-      -- Smart action depending on context, either follow link or toggle checkbox.
-      ["<cr>"] = {
-        action = function()
-          return require("obsidian").util.smart_action()
-        end,
-        opts = { buffer = true, expr = true },
-      },
+      --   -- Toggle check-boxes.
+      --   ["<leader>ch"] = {
+      --     action = function()
+      --       return require("obsidian").util.toggle_checkbox()
+      --     end,
+      --     opts = { buffer = true },
+      --   },
+      --   -- Smart action depending on context, either follow link or toggle checkbox.
+      --   ["<cr>"] = {
+      --     action = function()
+      --       return require("obsidian").util.smart_action()
+      --     end,
+      --     opts = { buffer = true, expr = true },
+      --   },
     },
 
     --Where to put new notes. Valid options are
@@ -157,7 +157,12 @@ return {
         note:add_alias(note.title)
       end
 
-      local out = { id = note.id, aliases = note.aliases, tags = note.tags }
+      local out = {
+        id = note.id,
+        aliases = note.aliases,
+        tags = note.tags,
+        created = note.created or os.date("%Y-%m-%d %H:%M"),
+      }
 
       -- `note.metadata` contains any manually added fields in the frontmatter.
       -- So here we just make sure those fields are kept in the frontmatter.
@@ -314,7 +319,27 @@ return {
     },
   },
   keys = {
+    { "<leader>oo", "<cmd>ObsidianOpen<cr>", desc = "Obsidian open" },
     { "<leader>on", "<cmd>ObsidianNew<cr>", desc = "Create new Obsidian note" },
     { "<leader>oq", "<cmd>ObsidianQuickSwitch<cr>", desc = "Toggle Obsidian quick switch" },
+    { "<leader>oc", "<cmd>ObsidianToggleCheckbox<cr>", desc = "Cycle through Obsidian Checkbox options" },
+    { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Toggle Obsidian search" },
+    { "<leader>o=", "<cmd>ObsidianToday<cr>", desc = "Open Obsidian Today daily note" },
+    { "<leader>o[", "<cmd>ObsidianYesterday<cr>", desc = "Open Obsidian Yesterday daily note" },
+    { "<leader>o]", "<cmd>ObsidianTomorrow<cr>", desc = "Open Obsidian Tomorrow daily note" },
+    -- <cmd> Doesn't wait for next input for title, had to use : to make it work
+    { "<leader>ox", ":ObsidianExtract<cr>", mode = { "v" }, desc = "Obsidian Extract text into a new note" },
+    { "<leader>ow", "<cmd>ObsidianWorkspace<cr>", desc = "Open Obsidian workspace picker" },
+    { "<leader>oR", "<cmd>ObsidianRename<cr>", desc = "Obsidian Rename current note" },
+    { "<leader>ol", ":ObsidianLink<cr>", mode = { "v" }, desc = "Obsidian Link to a note within workspace" },
+    { "<leader>oL", "<cmd>ObsidianLinks<cr>", desc = "Lists Obsidian Links within current note" },
+    { "<leader>op", "<cmd>ObsidianPasteImg<cr>", desc = "Obsidian Paste Image into note" },
+    { "<leader>ot", "<cmd>ObsidianTags<cr>", desc = "Show a list of Obsidian Tag" },
+    {
+      "<leader>od",
+      "<cmd>ObsidianDailies -7 1<cr>",
+      desc = "Show a list of Obsidian daily notes from last week till tomorrow",
+    },
+    { "<leader>oT", "<cmd>ObsidianTemplate<cr>", desc = "Show a list of Obsidian templates to use" },
   },
 }
