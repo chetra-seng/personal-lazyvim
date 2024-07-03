@@ -247,7 +247,10 @@ return {
       -- Runs right before writing the buffer for a note.
       ---@param client obsidian.Client
       ---@param note obsidian.Note
-      pre_write_note = function(client, note) end,
+      pre_write_note = function(client, note)
+        -- Added modified date to the note metadata every time it is saved.
+        note.metadata.modified = os.date("%Y-%m-%d %H:%M")
+      end,
 
       -- Runs anytime the workspace is set/changed.
       ---@param client obsidian.Client
