@@ -249,7 +249,9 @@ return {
       ---@param note obsidian.Note
       pre_write_note = function(client, note)
         -- Added modified date to the note metadata every time it is saved.
-        note.metadata.modified = os.date("%Y-%m-%d %H:%M")
+        if note.metadata ~= nil then
+          note.metadata.modified = os.date("%Y-%m-%d %H:%M")
+        end
       end,
 
       -- Runs anytime the workspace is set/changed.
