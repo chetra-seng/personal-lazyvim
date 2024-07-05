@@ -330,8 +330,8 @@ return {
     { "<leader>oc", "<cmd>ObsidianToggleCheckbox<cr>", desc = "Cycle through Obsidian Checkbox options" },
     { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Toggle Obsidian search" },
     { "<leader>o=", "<cmd>ObsidianToday<cr>", desc = "Open Obsidian Today daily note" },
-    { "<leader>o[", "<cmd>ObsidianYesterday<cr>", desc = "Open Obsidian Yesterday daily note" },
-    { "<leader>o]", "<cmd>ObsidianTomorrow<cr>", desc = "Open Obsidian Tomorrow daily note" },
+    { "<leader>o[", "<cmd>ObsidianToday -1<cr>", desc = "Open Obsidian Yesterday daily note" },
+    { "<leader>o]", "<cmd>ObsidianToday +1<cr>", desc = "Open Obsidian Tomorrow daily note" },
     -- <cmd> Doesn't wait for next input for title, had to use : to make it work
     { "<leader>ox", ":ObsidianExtract<cr>", mode = { "v" }, desc = "Obsidian Extract text into a new note" },
     { "<leader>ow", "<cmd>ObsidianWorkspace<cr>", desc = "Open Obsidian workspace picker" },
