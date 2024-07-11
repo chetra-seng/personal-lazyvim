@@ -20,4 +20,62 @@ return {
       },
     },
   },
+  keys = {
+    {
+      "<leader>jb",
+      "<cmd>JavaBuildWorkspace<cr>",
+      desc = "Build java workspace",
+    },
+    {
+      "<leader>jj",
+      "<cmd>JavaRunnerRunMain<cr>",
+      desc = "Java run main class of application",
+    },
+    {
+      "<leader>js",
+      "<cmd>JavaRunnerStopMain<cr>",
+      desc = "Java stop main class of application",
+    },
+    {
+      "<leader>jp",
+      "<cmd>JavaProfile<cr>",
+      desc = "Java open profile UI",
+    },
+    {
+      "<leader>jc",
+      "<cmd>JavaTestRunCurrentClass<cr>",
+      desc = "Java run test for current class",
+    },
+    {
+      "<leader>jC",
+      "<cmd>JavaTestDebugCurrentClass<cr>",
+      desc = "Java run debug test for current class",
+    },
+    {
+      "<leader>jm",
+      "<cmd>JavaTestRunCurrentMethod<cr>",
+      desc = "Java run test for current method",
+    },
+    {
+      "<leader>jM",
+      "<cmd>JavaTestDebugCurrentMethod<cr>",
+      desc = "Java run debug test for current method",
+    },
+    {
+      "<leader>jt",
+      "<cmd>JavaRunnerToggleLogs<cr>",
+      desc = "Java toggle runner log",
+    },
+    {
+      "<leader>jr",
+      "<cmd>JavaTestViewLastReport<cr>",
+      desc = "Java view last test report",
+    },
+
+    {
+      "<leader>jR",
+      "<cmd>JavaSettingsChangeRuntime<cr>",
+      desc = "Java change jdk runtime",
+    },
+  },
 }
