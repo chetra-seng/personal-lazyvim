@@ -13,7 +13,7 @@ return {
           require("toggleterm").toggle(count)
         end
       end,
-      "Toggle terminal",
+      desc = "Toggle specific or all terminals",
     },
     {
       "<leader>tv",
