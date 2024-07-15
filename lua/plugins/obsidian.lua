@@ -337,7 +337,7 @@ return {
     { "<leader>ow", "<cmd>ObsidianWorkspace<cr>", desc = "Open Obsidian workspace picker" },
     { "<leader>oR", "<cmd>ObsidianRename<cr>", desc = "Obsidian Rename current note" },
     { "<leader>ol", ":ObsidianLink<cr>", mode = { "v" }, desc = "Obsidian Link to a note within workspace" },
-    { "<leader>oL", "<cmd>ObsidianLinks<cr>", desc = "Lists Obsidian Links within current note" },
+    { "<leader>oL", "<cmd>ObsidianLinks<cr>", desc = "Show a list of Obsidian links within current note" },
     { "<leader>op", "<cmd>ObsidianPasteImg<cr>", desc = "Obsidian Paste Image into note" },
     { "<leader>ot", "<cmd>ObsidianTags<cr>", desc = "Show a list of Obsidian Tag" },
     {
@@ -345,6 +345,10 @@ return {
       "<cmd>ObsidianDailies -7 1<cr>",
       desc = "Show a list of Obsidian daily notes from last week till tomorrow",
     },
-    { "<leader>oT", "<cmd>ObsidianTemplate<cr>", desc = "Show a list of Obsidian templates to use" },
+    {
+      "<leader>oT",
+      "<cmd>ObsidianNewFromTemplate<cr>",
+      desc = "Show a list of Obsidian templates to create a new note from",
+    },
   },
 }
