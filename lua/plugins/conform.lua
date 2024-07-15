@@ -6,6 +6,7 @@ return {
       ["javascriptreact"] = { "prettier" },
       ["typescript"] = { "prettier" },
       ["typescriptreact"] = { "prettier" },
+      ["markdown"] = { "prettier" },
       ["vue"] = { "prettier" },
       ["css"] = { "prettier" },
       ["scss"] = { "prettier" },
