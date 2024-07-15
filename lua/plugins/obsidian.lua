@@ -324,7 +324,7 @@ return {
     },
   },
   keys = {
-    { "<leader>oo", "<cmd>ObsidianOpen<cr>", desc = "Obsidian open" },
+    { "<leader>oo", "<cmd>ObsidianOpen<cr>", desc = "Open current note inside Obsidian" },
     { "<leader>on", "<cmd>ObsidianNew<cr>", desc = "Create new Obsidian note" },
     { "<leader>oq", "<cmd>ObsidianQuickSwitch<cr>", desc = "Toggle Obsidian quick switch" },
     { "<leader>oc", "<cmd>ObsidianToggleCheckbox<cr>", desc = "Cycle through Obsidian Checkbox options" },
@@ -333,22 +333,22 @@ return {
     { "<leader>o[", "<cmd>ObsidianToday -1<cr>", desc = "Open Obsidian Yesterday daily note" },
     { "<leader>o]", "<cmd>ObsidianToday +1<cr>", desc = "Open Obsidian Tomorrow daily note" },
     -- <cmd> Doesn't wait for next input for title, had to use : to make it work
-    { "<leader>ox", ":ObsidianExtract<cr>", mode = { "v" }, desc = "Obsidian Extract text into a new note" },
+    { "<leader>ox", ":ObsidianExtract<cr>", mode = { "v" }, desc = "Extract text into a new Obsidian note" },
     { "<leader>ow", "<cmd>ObsidianWorkspace<cr>", desc = "Open Obsidian workspace picker" },
-    { "<leader>oR", "<cmd>ObsidianRename<cr>", desc = "Obsidian Rename current note" },
+    { "<leader>oR", "<cmd>ObsidianRename<cr>", desc = "Rename current Obsidian note" },
     { "<leader>ol", ":ObsidianLink<cr>", mode = { "v" }, desc = "Obsidian Link to a note within workspace" },
-    { "<leader>oL", "<cmd>ObsidianLinks<cr>", desc = "Show a list of Obsidian links within current note" },
+    { "<leader>oL", "<cmd>ObsidianLinks<cr>", desc = "List all Obsidian links within current note" },
     { "<leader>op", "<cmd>ObsidianPasteImg<cr>", desc = "Obsidian Paste Image into note" },
-    { "<leader>ot", "<cmd>ObsidianTags<cr>", desc = "Show a list of Obsidian Tag" },
+    { "<leader>ot", "<cmd>ObsidianTags<cr>", desc = "List all Obsidian note tags" },
     {
       "<leader>od",
       "<cmd>ObsidianDailies -7 1<cr>",
-      desc = "Show a list of Obsidian daily notes from last week till tomorrow",
+      desc = "List Obsidian daily notes from last week till tomorrow",
     },
     {
       "<leader>oT",
-      "<cmd>ObsidianNewFromTemplate<cr>",
-      desc = "Show a list of Obsidian templates to create a new note from",
+      "<cmd>ObsidianTemplate<cr>",
+      desc = "Insert Obsidian template into current file",
     },
   },
 }
