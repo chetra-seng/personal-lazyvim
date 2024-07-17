@@ -350,5 +350,10 @@ return {
       "<cmd>ObsidianTemplate<cr>",
       desc = "Insert Obsidian template into current file",
     },
+    {
+      "<leader>oC",
+      "<cmd>ObsidianTOC<cr>",
+      desc = "List all headers in current Obsdian note",
+    },
   },
 }
