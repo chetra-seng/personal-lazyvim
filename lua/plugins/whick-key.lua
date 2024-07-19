@@ -11,6 +11,7 @@ return {
         icon = "",
         color = "red",
       } },
+      { "<leader>k", group = "Kulala", icon = { icon = "󱂛", color = "blue" } },
     },
   },
 }
