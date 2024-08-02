@@ -28,7 +28,7 @@ return {
   keys = {
     {
       "<leader>jb",
-      "<cmd>JavaBuildWorkspace<cr>",
+      "<cmd>JavaBuildBuildWorkspace<cr>",
       desc = "Build java workspace",
     },
     {
