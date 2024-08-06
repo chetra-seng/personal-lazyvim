@@ -7,13 +7,16 @@ return {
       "<leader>tt",
       function()
         local count = vim.v.count1
-        if count == 1 then
-          require("toggleterm").toggle()
-        else
-          require("toggleterm").toggle(count)
-        end
+        require("toggleterm").toggle(count)
       end,
-      desc = "Toggle specific or all terminals",
+      desc = "Toggle first or specific terminal",
+    },
+    {
+      "<leader>tT",
+      function()
+        require("toggleterm").toggle()
+      end,
+      desc = "Toggle all terminals",
     },
     {
       "<leader>tv",
