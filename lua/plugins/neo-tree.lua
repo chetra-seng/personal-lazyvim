@@ -4,7 +4,10 @@ return {
     filesystem = {
       window = {
         mappings = {
-          ["<leader>p"] = "image_wezterm", -- " or another map
+          ["<leader>p"] = {
+            "image_wezterm",
+            desc = "Explorer preview image",
+          },
         },
       },
       commands = {
