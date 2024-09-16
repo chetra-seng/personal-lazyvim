@@ -14,6 +14,7 @@ return {
       ["json"] = { "prettier" },
       ["rust"] = { "rustfmt" },
       ["beancount"] = { "bean-format" },
+      ["java"] = { "google-java-format" },
     },
   },
 }
