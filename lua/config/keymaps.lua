@@ -5,9 +5,9 @@ vim.keymap.del("n", "<C-Right>")
 vim.keymap.del("n", "<C-Left>")
 vim.keymap.del("n", "<C-Up>")
 vim.keymap.del("n", "<C-Down>")
-vim.keymap.del("n", "<C-/>")
-vim.keymap.del("n", "<leader>ft")
-vim.keymap.del("n", "<leader>fT")
+-- vim.keymap.del("n", "<C-/>")
+-- vim.keymap.del("n", "<leader>ft")
+-- vim.keymap.del("n", "<leader>fT")
 
 -- Add any additional keymaps here
 -- Chetra custom keymaps
