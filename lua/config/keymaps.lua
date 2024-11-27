@@ -15,4 +15,4 @@ vim.keymap.set("n", "<A-->", "<cmd>resize -2<cr>", { desc = "Decrease Window Hei
 vim.keymap.set("n", "<A-=>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
 vim.keymap.set("n", "<A-<>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
 vim.keymap.set("n", "<A->>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
-vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent directory" })
+vim.keymap.set("n", "-", "<cmd>Oil --float<cr>", { desc = "Open parent directory" })
