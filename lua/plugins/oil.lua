@@ -98,4 +98,16 @@ return {
       },
     })
   end,
+  keymaps = {
+    ["<leader>p"] = "image_wezterm", -- Define the keybinding for image preview
+  },
+  commands = {
+    image_wezterm = function(state)
+      local entry = state.entry
+      if entry.type == "file" then
+        -- Use the path to preview the image
+        require("image_preview").PreviewImage(entry.path)
+      end
+    end,
+  },
 }
