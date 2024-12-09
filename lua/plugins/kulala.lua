@@ -58,5 +58,12 @@ return {
       end,
       desc = "Jump to next Kulala request",
     },
+    {
+      "<leader>ke",
+      function()
+        require("kulala").set_selected_env()
+      end,
+      desc = "Set selected environment profile",
+    },
   },
 }
