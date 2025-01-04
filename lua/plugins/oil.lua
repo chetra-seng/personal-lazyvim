@@ -63,7 +63,7 @@ return {
         show_hidden = false,
         is_hidden_file = function(name, bufnr)
           local dir = require("oil").get_current_dir(bufnr)
-          local is_dotfile = vim.startswith(name, ".") and name ~= ".."
+          local is_dotfile = vim.startswith(name, ".")
           -- if no local directory (e.g. for ssh connections), just hide dotfiles
           if not dir then
             return is_dotfile

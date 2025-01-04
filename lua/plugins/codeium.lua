@@ -2,10 +2,11 @@ return {
   "Exafunction/codeium.nvim",
   config = function()
     require("codeium").setup({
-      enable_chat = true,
+      -- Optionally disable cmp source if using virtual text only
+      enable_cmp_source = false,
+      virtual_text = {
+        enabled = true,
+      },
     })
   end,
-  keys = {
-    { "<leader>aa", "<cmd>Codeium Chat<cr>", desc = "Open Codeium chat in the browser" },
-  }
 }
