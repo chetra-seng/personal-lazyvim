@@ -55,6 +55,7 @@ return {
       orig_refresh(...)
     end
     require("oil").setup({
+      hide_parent_dir = true,
       default_file_explorer = true,
       win_options = {
         signcolumn = "yes:2",
@@ -75,6 +76,10 @@ return {
             -- Check if file is gitignored
             return git_status[dir].ignored[name]
           end
+        end,
+        -- This function defines what will never be shown, even when `show_hidden` is set
+        is_always_hidden = function(name, bufnr)
+          return name == ".."
         end,
         float = {
           -- Padding around the floating window
