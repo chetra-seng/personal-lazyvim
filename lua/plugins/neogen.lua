@@ -8,13 +8,13 @@ return {
           { value = "func", desc = "Function annotation" },
           { value = "class", desc = "Class annotation" },
           { value = "type", desc = "Type annotation" },
-          { value = "file", desc = "Class annotation" },
+          { value = "file", desc = "File annotation" },
         }
 
         local items = {}
 
         for _, option in ipairs(options) do
-          table.insert(items, option.desc)
+          table.insert(items, option.value .. " - " .. option.desc)
         end
 
         vim.ui.select(items, {
@@ -23,7 +23,7 @@ return {
           if selected then
             require("neogen").generate({ type = options[i].value })
           else
-            error("No annotation type selected")
+            print("No annotation type selected")
           end
         end)
       end,
