@@ -16,18 +16,7 @@ local function has_eslint_config()
       local file_path = current_dir .. "/" .. eslint_file
 
       if vim.fn.filereadable(file_path) then
-        if eslint_file == "package.json" then
-          -- Check for eslintConfig key in package.json
-          local file_content = vim.fn.readfile(file_path)
-          for _, line in ipairs(file_content) do
-            if line:match('"eslintConfig"%s*:%s*{') then
-              eslint_found = true
-              break
-            end
-          end
-        else
-          eslint_found = true
-        end
+        eslint_found = true
         break
       end
     end
