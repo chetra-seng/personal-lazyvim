@@ -8,8 +8,8 @@ local function has_eslint_config()
       ".eslintrc.js",
       ".eslintrc.json",
       "eslint.config.js",
+      "eslint.config.mjs",
       "eslint.config.ts",
-      "package.json",
     }
 
     for _, eslint_file in ipairs(eslint_files) do
