@@ -47,7 +47,7 @@ return {
       desc = "Java run test for current class",
     },
     {
-      "<leader>jC",
+      "<leader>jd",
       "<cmd>JavaTestDebugCurrentClass<cr>",
       desc = "Java run debug test for current class",
     },
@@ -65,6 +65,11 @@ return {
       "<leader>jt",
       "<cmd>JavaRunnerToggleLogs<cr>",
       desc = "Java toggle runner log",
+    },
+    {
+      "<leader>jT",
+      "<cmd>JavaRunnerSwitchLogs<cr>",
+      desc = "Java switch runner log",
     },
     {
       "<leader>jr",
