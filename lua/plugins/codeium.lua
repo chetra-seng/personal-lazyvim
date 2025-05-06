@@ -1,6 +1,8 @@
 return {
   "Exafunction/codeium.nvim",
+  enabled = true,
   opts = {
+    quiet = true,
     enable_cmp_source = false,
     virtual_text = {
       enabled = true,
