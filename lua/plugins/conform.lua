@@ -62,6 +62,7 @@ return {
         ["java"] = { "google-java-format" },
         ["lua"] = { "stylua" },
         ["go"] = { "gofmt" },
+        ["xml"] = { "xmlformatter" },
       },
     }
   end,
