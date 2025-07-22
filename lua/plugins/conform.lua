@@ -38,11 +38,15 @@ end
 
 return {
   "conform.nvim",
-  opts = function()
+  opts = function(_, opts)
     local biome = require("lint").linters.biomejs
     biome.args = {
       "--indent-style",
       "space",
+    }
+
+    opts.formatters.sqlfluff = {
+      args = { "format", "-" },
     }
 
     return {
@@ -63,6 +67,7 @@ return {
         ["lua"] = { "stylua" },
         ["go"] = { "gofmt" },
         ["xml"] = { "xmlformatter" },
+        ["sql"] = { "sqlfluff" },
       },
     }
   end,

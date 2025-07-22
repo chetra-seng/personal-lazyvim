@@ -34,18 +34,33 @@ end
 
 return {
   "nvim-lint",
-  opts = {
-    linters_by_ft = {
-      beancount = { "bean_check" },
-      javascript = { has_eslint_config() and "eslint" or "biomejs" },
-      typescript = { has_eslint_config() and "eslint" or "biomejs" },
-      typescriptreact = { has_eslint_config() and "eslint" or "biomejs" },
-      javascriptreact = { has_eslint_config() and "eslint" or "biomejs" },
-    },
-  },
-  config = function()
-    require("lint").try_lint(nil, {
-      ignore_errors = true,
+  opts = function(_, opts)
+    return vim.tbl_deep_extend("force", opts or {}, {
+      linters = {
+        sqlfluff = {
+          command = "sqlfluff",
+          args = { "lint", "--format=json", "-" },
+          stdin = true,
+          cwd = function()
+            return vim.fn.getcwd()
+          end,
+        },
+      },
+      linters_by_ft = {
+        beancount = { "bean_check" },
+        javascript = { has_eslint_config() and "eslint" or "biomejs" },
+        typescript = { has_eslint_config() and "eslint" or "biomejs" },
+        typescriptreact = { has_eslint_config() and "eslint" or "biomejs" },
+        javascriptreact = { has_eslint_config() and "eslint" or "biomejs" },
+        sql = { "sqlfluff" },
+      },
     })
+  end,
+  config = function(_, config)
+    if config then
+      require("lint").try_lint(nil, {
+        ignore_errors = true,
+      })
+    end
   end,
 }
