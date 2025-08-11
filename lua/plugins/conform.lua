@@ -61,6 +61,7 @@ return {
         ["less"] = { has_prettier_config() and "prettier" or "biomejs" },
         ["html"] = { has_prettier_config() and "prettier" or "biomejs" },
         ["json"] = { has_prettier_config() and "prettier" or "biomejs" },
+        ["htmlangular"] = { "prettier" },
         ["rust"] = { "rustfmt" },
         ["beancount"] = { "bean-format" },
         ["java"] = { "google-java-format" },

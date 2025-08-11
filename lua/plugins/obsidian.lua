@@ -61,32 +61,6 @@ return {
       min_chars = 2,
     },
 
-    -- Optional, configure key mappings. These are the defaults. If you don't want to set any keymappings this
-    -- way then set 'mappings = {}'.
-    mappings = {
-      -- adds the 'gF' mapping to work on markdown/wiki links within your vault.
-      ["gF"] = {
-        action = function()
-          return require("obsidian").util.gf_passthrough()
-        end,
-        opts = { noremap = false, expr = true, buffer = true },
-      },
-      --   -- Toggle check-boxes.
-      --   ["<leader>ch"] = {
-      --     action = function()
-      --       return require("obsidian").util.toggle_checkbox()
-      --     end,
-      --     opts = { buffer = true },
-      --   },
-      --   -- Smart action depending on context, either follow link or toggle checkbox.
-      --   ["<cr>"] = {
-      --     action = function()
-      --       return require("obsidian").util.smart_action()
-      --     end,
-      --     opts = { buffer = true, expr = true },
-      --   },
-    },
-
     --Where to put new notes. Valid options are
     --  * "current_dir" - put new notes in same directory as the current buffer.
     --  * "notes_subdir" - put new notes in the default notes subdirectory.
@@ -194,12 +168,12 @@ return {
       -- vim.fn.jobstart({"xdg-open", url})  -- linux
     end,
 
-    -- Optional, set to true if you use the Obsidian Advanced URI plugin.
-    -- https://github.com/Vinzent03/obsidian-advanced-uri
-    use_advanced_uri = false,
-
-    -- Optional, set to true to force ':ObsidianOpen' to bring the app to the foreground.
-    open_app_foreground = false,
+    open = {
+      -- Optional, set to true if you use the Obsidian Advanced URI plugin.
+      use_advanced_uri = false,
+      -- Optional, set to true to force ':ObsidianOpen' to bring the app to the foreground.
+      func = vim.ui.open,
+    },
 
     picker = {
       -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', or 'mini.pick'.
@@ -323,37 +297,52 @@ return {
         return string.format("![%s](%s)", path.name, path)
       end,
     },
+    checkbox = {
+      order = { " ", "~", "!", ">", "x" },
+    },
   },
+  configs = function()
+    require("obsidian").setup({
+      callbacks = {
+        enter_note = function(_, note)
+          -- adds the 'gF' mapping to work on markdown/wiki links within your vault.
+          vim.keymap.set("n", "gF", function()
+            return require("obsidian").util.gf_passthrough()
+          end, { noremap = false, expr = true, buffer = note.bufnr, desc = "Obsidian gF passthrough" })
+        end,
+      },
+    })
+  end,
   keys = {
-    { "<leader>oo", "<cmd>ObsidianOpen<cr>", desc = "Open current note inside Obsidian" },
-    { "<leader>on", "<cmd>ObsidianNew<cr>", desc = "Create new Obsidian note" },
-    { "<leader>oq", "<cmd>ObsidianQuickSwitch<cr>", desc = "Toggle Obsidian quick switch" },
-    { "<leader>oc", "<cmd>ObsidianToggleCheckbox<cr>", desc = "Cycle through Obsidian Checkbox options" },
-    { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Toggle Obsidian search" },
-    { "<leader>o=", "<cmd>ObsidianToday<cr>", desc = "Open Obsidian Today daily note" },
-    { "<leader>o[", "<cmd>ObsidianToday -1<cr>", desc = "Open Obsidian Yesterday daily note" },
-    { "<leader>o]", "<cmd>ObsidianToday +1<cr>", desc = "Open Obsidian Tomorrow daily note" },
+    { "<leader>oo", "<cmd>Obsidian open<cr>", desc = "Open current note inside Obsidian" },
+    { "<leader>on", "<cmd>Obsidian new<cr>", desc = "Create new Obsidian note" },
+    { "<leader>oq", "<cmd>Obsidian quick_switch<cr>", desc = "Toggle Obsidian quick switch" },
+    { "<leader>oc", "<cmd>Obsidian toggle_checkbox<cr>", desc = "Cycle through Obsidian Checkbox options" },
+    { "<leader>os", "<cmd>Obsidian search<cr>", desc = "Toggle Obsidian search" },
+    { "<leader>o=", "<cmd>Obsidian today<cr>", desc = "Open Obsidian Today daily note" },
+    { "<leader>o[", "<cmd>Obsidian today -1<cr>", desc = "Open Obsidian Yesterday daily note" },
+    { "<leader>o]", "<cmd>Obsidian today +1<cr>", desc = "Open Obsidian Tomorrow daily note" },
     -- <cmd> Doesn't wait for next input for title, had to use : to make it work
-    { "<leader>ox", ":ObsidianExtract<cr>", mode = { "v" }, desc = "Extract text into a new Obsidian note" },
-    { "<leader>ow", "<cmd>ObsidianWorkspace<cr>", desc = "Open Obsidian workspace picker" },
-    { "<leader>oR", "<cmd>ObsidianRename<cr>", desc = "Rename current Obsidian note" },
-    { "<leader>ol", ":ObsidianLink<cr>", mode = { "v" }, desc = "Obsidian Link to a note within workspace" },
-    { "<leader>oL", "<cmd>ObsidianLinks<cr>", desc = "List all Obsidian links within current note" },
-    { "<leader>op", "<cmd>ObsidianPasteImg<cr>", desc = "Obsidian Paste Image into note" },
-    { "<leader>ot", "<cmd>ObsidianTags<cr>", desc = "List all Obsidian note tags" },
+    { "<leader>ox", ":Obsidian extract_note<cr>", mode = { "v" }, desc = "Extract text into a new Obsidian note" },
+    { "<leader>ow", "<cmd>Obsidian workspace<cr>", desc = "Open Obsidian workspace picker" },
+    { "<leader>oR", "<cmd>Obsidian rename<cr>", desc = "Rename current Obsidian note" },
+    { "<leader>ol", ":Obsidian link<cr>", mode = { "v" }, desc = "Obsidian Link to a note within workspace" },
+    { "<leader>oL", "<cmd>Obsidian links<cr>", desc = "List all Obsidian links within current note" },
+    { "<leader>op", "<cmd>Obsidian paste_img<cr>", desc = "Obsidian Paste Image into note" },
+    { "<leader>ot", "<cmd>Obsidian tags<cr>", desc = "List all Obsidian note tags" },
     {
       "<leader>od",
-      "<cmd>ObsidianDailies -7 1<cr>",
+      "<cmd>Obsidian dailies -7 1<cr>",
       desc = "List Obsidian daily notes from last week till tomorrow",
     },
     {
       "<leader>oT",
-      "<cmd>ObsidianTemplate<cr>",
+      "<cmd>Obsidian template<cr>",
       desc = "Insert Obsidian template into current file",
     },
     {
       "<leader>oC",
-      "<cmd>ObsidianTOC<cr>",
+      "<cmd>Obsidian toc<cr>",
       desc = "List all headers in current Obsdian note",
     },
   },
