@@ -102,6 +102,69 @@ return {
         },
       },
     })
+
+    local function oil_paste_from_clipboard()
+      local oil = require("oil")
+
+      -- Detect OS and clipboard command
+      local paste_cmd
+      if vim.fn.has("mac") == 1 then
+        paste_cmd = "pbpaste"
+      elseif vim.fn.executable("wl-paste") == 1 then
+        paste_cmd = "wl-paste"
+      elseif vim.fn.executable("xclip") == 1 then
+        paste_cmd = "xclip -selection clipboard -o"
+      else
+        vim.notify("No supported clipboard command found", vim.log.levels.ERROR)
+        return
+      end
+
+      -- Get path(s) from clipboard
+      local file_paths = vim.fn.systemlist(paste_cmd)
+      if #file_paths == 0 then
+        vim.notify("📋 Clipboard is empty or has no file paths", vim.log.levels.WARN)
+        return
+      end
+
+      -- Get Oil's current directory
+      local dest_dir = oil.get_current_dir()
+      if not dest_dir then
+        vim.notify("⚠️ Not inside Oil buffer", vim.log.levels.WARN)
+        return
+      end
+
+      -- Copy each file
+      for _, path in ipairs(file_paths) do
+        local expanded = vim.fn.expand(path)
+        if vim.fn.filereadable(expanded) == 1 or vim.fn.isdirectory(expanded) == 1 then
+          local cmd = string.format("cp -r %q %q", expanded, dest_dir)
+          local result = vim.fn.system(cmd)
+          if vim.v.shell_error ~= 0 then
+            vim.notify("❌ Copy failed: " .. result, vim.log.levels.ERROR)
+          else
+            vim.notify("✅ Copied " .. expanded .. " → " .. dest_dir, vim.log.levels.INFO)
+          end
+        else
+          vim.notify("❌ No such file: " .. expanded, vim.log.levels.ERROR)
+        end
+      end
+
+      -- Refresh Oil buffer
+      refresh.callback()
+    end
+
+    -- Keymap inside Oil buffer
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "oil",
+      callback = function()
+        vim.keymap.set(
+          "n",
+          "<leader>P",
+          oil_paste_from_clipboard,
+          { buffer = true, desc = "Paste file from clipboard into Oil" }
+        )
+      end,
+    })
   end,
   keymaps = {
     ["<leader>p"] = "image_wezterm", -- Define the keybinding for image preview
