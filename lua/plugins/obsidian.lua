@@ -301,18 +301,6 @@ return {
       order = { " ", "~", "!", ">", "x" },
     },
   },
-  configs = function()
-    require("obsidian").setup({
-      callbacks = {
-        enter_note = function(_, note)
-          -- adds the 'gF' mapping to work on markdown/wiki links within your vault.
-          vim.keymap.set("n", "gF", function()
-            return require("obsidian").util.gf_passthrough()
-          end, { noremap = false, expr = true, buffer = note.bufnr, desc = "Obsidian gF passthrough" })
-        end,
-      },
-    })
-  end,
   keys = {
     { "<leader>oo", "<cmd>Obsidian open<cr>", desc = "Open current note inside Obsidian" },
     { "<leader>on", "<cmd>Obsidian new<cr>", desc = "Create new Obsidian note" },
