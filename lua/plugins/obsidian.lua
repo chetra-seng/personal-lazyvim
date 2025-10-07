@@ -70,28 +70,21 @@ return {
     ---@param title string|?
     ---@return string
     note_id_func = function(title)
-      -- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
-      -- In this case a note with the title 'My new note' will be given an ID that looks
-      -- like '1657296016-my-new-note', and therefore the file name '1657296016-my-new-note.md'
-      local suffix = ""
       if title ~= nil then
-        -- If title is given, transform it into valid file name.
-        suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+        local id = tostring(os.time()) .. "-" .. title:lower():gsub("%s+", "-")
+        return id
       else
-        -- If title is nil, just add 4 random uppercase letters to the suffix.
-        for _ = 1, 4 do
-          suffix = suffix .. string.char(math.random(65, 90))
-        end
+        return tostring(os.time())
       end
-      return tostring(os.time()) .. "-" .. suffix
     end,
 
     -- Optional, customize how note file names are generated given the ID, target directory, and title.
     ---@param spec { id: string, dir: obsidian.Path, title: string|? }
     ---@return string|obsidian.Path The full path to the new note.
     note_path_func = function(spec)
-      -- This is equivalent to the default behavior.
-      local path = spec.dir / tostring(spec.id)
+      -- Use the title directly as the filename.
+      local filename = spec.title or spec.id
+      local path = spec.dir / filename
       return path:with_suffix(".md")
     end,
 
@@ -314,7 +307,8 @@ return {
     { "<leader>ox", ":Obsidian extract_note<cr>", mode = { "v" }, desc = "Extract text into a new Obsidian note" },
     { "<leader>ow", "<cmd>Obsidian workspace<cr>", desc = "Open Obsidian workspace picker" },
     { "<leader>oR", "<cmd>Obsidian rename<cr>", desc = "Rename current Obsidian note" },
-    { "<leader>ol", ":Obsidian link<cr>", mode = { "v" }, desc = "Obsidian Link to a note within workspace" },
+    { "<leader>oll", ":Obsidian link<cr>", mode = { "v" }, desc = "Obsidian Link to a note within workspace" },
+    { "<leader>oln", ":Obsidian link_new<cr>", mode = { "v" }, desc = "Obsidian create link to visual selection" },
     { "<leader>oL", "<cmd>Obsidian links<cr>", desc = "List all Obsidian links within current note" },
     { "<leader>op", "<cmd>Obsidian paste_img<cr>", desc = "Obsidian Paste Image into note" },
     { "<leader>ot", "<cmd>Obsidian tags<cr>", desc = "List all Obsidian note tags" },
