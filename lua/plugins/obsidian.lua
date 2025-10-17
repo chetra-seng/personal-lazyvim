@@ -117,31 +117,27 @@ return {
     -- `true` indicates that you don't want obsidian.nvim to manage frontmatter.
     disable_frontmatter = false,
 
+    ---@class obsidian.config.FrontmatterOpts
+    ---
+    --- Whether to enable frontmatter, boolean for global on/off, or a function that takes filename and returns boolean.
+    ---@field enabled? (fun(fname: string?): boolean)|boolean
+    ---
+    --- Function to turn Note attributes into frontmatter.
+    ---@field func? fun(note: obsidian.Note): table<string, any>
+    --- Function that is passed to table.sort to sort the properties, or a fixed order of properties.
+
     -- Optional, alternatively you can customize the frontmatter data.
-    ---@return table
-    note_frontmatter_func = function(note)
-      -- Add the title of the note as an alias.
-      if note.title then
-        note:add_alias(note.title)
-      end
-
-      local out = {
-        id = note.id,
-        aliases = note.aliases,
-        tags = note.tags,
-        created = note.created or os.date("%Y-%m-%d %H:%M"),
-      }
-
-      -- `note.metadata` contains any manually added fields in the frontmatter.
-      -- So here we just make sure those fields are kept in the frontmatter.
-      if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
-        for k, v in pairs(note.metadata) do
-          out[k] = v
-        end
-      end
-
-      return out
-    end,
+    --- List of string that sorts frontmatter properties, or a function that compares two values, set to vim.NIL/false to do no sorting
+    ---@field sort? string[] | (fun(a: any, b: any): boolean) | vim.NIL | boolean
+    frontmatter = {
+      enabled = true,
+      func = function(note)
+        vim.notify("Hello world")
+        local out = require("obsidian.builtin").frontmatter(note)
+        out.modified = os.date("%Y-%m-%d %H:%M")
+        return out
+      end,
+    },
 
     -- Optional, for templates (see below).
     templates = {
@@ -212,15 +208,14 @@ return {
       ---@param note obsidian.Note
       leave_note = function(client, note) end,
 
-      -- Runs right before writing the buffer for a note.
-      ---@param client obsidian.Client
-      ---@param note obsidian.Note
-      pre_write_note = function(client, note)
-        -- Added modified date to the note metadata every time it is saved.
-        if note.metadata ~= nil then
-          note.metadata.modified = os.date("%Y-%m-%d %H:%M")
-        end
-      end,
+      -- -- Runs right before writing the buffer for a note.
+      -- ---@param note obsidian.Note
+      -- pre_write_note = function(note)
+      --   -- Added modified date to the note metadata every time it is saved.
+      --   if note.metadata ~= nil then
+      --     note.metadata.modified = os.date("%Y-%m-%d %H:%M")
+      --   end
+      -- end,
 
       -- Runs anytime the workspace is set/changed.
       ---@param client obsidian.Client
