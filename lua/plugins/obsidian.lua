@@ -132,9 +132,13 @@ return {
     frontmatter = {
       enabled = true,
       func = function(note)
-        vim.notify("Hello world")
         local out = require("obsidian.builtin").frontmatter(note)
         out.modified = os.date("%Y-%m-%d %H:%M")
+
+        --- Add created field
+        if out.created == nil then
+          out.created = os.date("%Y-%m-%d %H:%M")
+        end
         return out
       end,
     },
