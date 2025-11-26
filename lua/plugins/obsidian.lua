@@ -135,9 +135,17 @@ return {
         local out = require("obsidian.builtin").frontmatter(note)
         out.modified = os.date("%Y-%m-%d %H:%M")
 
-        --- Add created field
+        --- Add created field based on file creation date
         if out.created == nil then
-          out.created = os.date("%Y-%m-%d %H:%M")
+          local stat = vim.loop.fs_stat(tostring(note.path))
+          if stat then
+            -- Use file's birthtime (creation time) or fallback to mtime if birthtime is not available
+            local created_time = stat.birthtime and stat.birthtime.sec or stat.mtime.sec
+            out.created = os.date("%Y-%m-%d %H:%M", created_time)
+          else
+            -- Fallback to current time if file stat fails
+            out.created = os.date("%Y-%m-%d %H:%M")
+          end
         end
         return out
       end,
