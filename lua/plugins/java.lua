@@ -1,6 +1,13 @@
 return {
   {
     "mfussenegger/nvim-jdtls",
+    keys = {
+      { "<leader>jsr", "<cmd>JavaSpringBootRun<cr>", desc = "Run Spring Boot", ft = "java" },
+      { "<leader>jsd", "<cmd>JavaSpringBootDebug<cr>", desc = "Debug Spring Boot", ft = "java" },
+      { "<leader>jst", "<cmd>JavaSpringBootToggle<cr>", desc = "Toggle Spring Boot terminal", ft = "java" },
+      { "<leader>jsl", "<cmd>JavaSpringBootList<cr>", desc = "List Spring Boot terminals", ft = "java" },
+      { "<leader>jss", "<cmd>JavaSpringBootStop<cr>", desc = "Stop Spring Boot terminal", ft = "java" },
+    },
     opts = function(_, opts)
       local mason_path = vim.fn.stdpath("data") .. "/mason"
       local home = os.getenv("HOME")
@@ -124,7 +131,15 @@ return {
             vim.notify("Looking for module: " .. module, vim.log.levels.INFO)
             for i, config in ipairs(dap_configs) do
               if config.mainClass and config.mainClass ~= "${file}" then
-                vim.notify("Config " .. i .. ": projectName=" .. (config.projectName or "nil") .. ", mainClass=" .. config.mainClass, vim.log.levels.INFO)
+                vim.notify(
+                  "Config "
+                    .. i
+                    .. ": projectName="
+                    .. (config.projectName or "nil")
+                    .. ", mainClass="
+                    .. config.mainClass,
+                  vim.log.levels.INFO
+                )
               end
             end
           end
@@ -136,10 +151,12 @@ return {
                 -- For multi-module, check if the config belongs to the selected module
                 -- Try both exact match and pattern match
                 if config.projectName then
-                  if config.projectName == module or
-                     config.projectName:match(module) or
-                     config.projectName:match("^" .. module .. "$") or
-                     config.projectName:lower():match(module:lower()) then
+                  if
+                    config.projectName == module
+                    or config.projectName:match(module)
+                    or config.projectName:match("^" .. module .. "$")
+                    or config.projectName:lower():match(module:lower())
+                  then
                     vim.notify("Matched! Using: " .. config.mainClass, vim.log.levels.INFO)
                     return config.mainClass, config.projectName
                   end
@@ -179,7 +196,9 @@ return {
               local config = {
                 type = "java",
                 request = "launch",
-                name = "Spring Boot" .. (module and (" - " .. module) or "") .. (profile and (" [" .. profile .. "]") or ""),
+                name = "Spring Boot"
+                  .. (module and (" - " .. module) or "")
+                  .. (profile and (" [" .. profile .. "]") or ""),
                 mainClass = input_class,
                 projectName = module or "",
                 args = args,
@@ -195,7 +214,9 @@ return {
           return {
             type = "java",
             request = "launch",
-            name = "Spring Boot" .. (module and (" - " .. module) or "") .. (profile and (" [" .. profile .. "]") or ""),
+            name = "Spring Boot"
+              .. (module and (" - " .. module) or "")
+              .. (profile and (" [" .. profile .. "]") or ""),
             mainClass = mainClass,
             projectName = projectName or module or "",
             args = args,
@@ -212,68 +233,6 @@ return {
             local _, _ = pcall(vim.lsp.codelens.refresh)
           end,
         })
-
-        -- Custom keymaps for Java testing and Spring Boot
-
-        -- Get current module from file path
-        local function get_current_module()
-          local file_path = vim.fn.expand("%:p")
-          local root_dir = vim.fn.getcwd()
-          local relative_path = file_path:sub(#root_dir + 2) -- +2 for the slash
-
-          -- Extract module name (first directory in path)
-          local module = relative_path:match("^([^/]+)/")
-
-          -- Check if this module exists in pom.xml or settings.gradle
-          local modules = get_modules()
-          for _, m in ipairs(modules) do
-            if m == module then
-              return module
-            end
-          end
-
-          return nil
-        end
-
-        local function get_test_runner(test_name, debug, build_tool)
-          local module = get_current_module()
-          local module_param = module and ("-pl " .. module .. " ") or ""
-
-          if build_tool == "gradle" then
-            local module_prefix = module and (":" .. module .. ":") or ":"
-            if debug then
-              return "./gradlew " .. module_prefix .. "test --tests " .. test_name .. " --debug-jvm"
-            else
-              return "./gradlew " .. module_prefix .. "test --tests " .. test_name
-            end
-          else
-            -- Maven
-            if debug then
-              return 'mvn ' .. module_param .. 'test -Dmaven.surefire.debug -Dtest="' .. test_name .. '"'
-            end
-            return 'mvn ' .. module_param .. 'test -Dtest="' .. test_name .. '"'
-          end
-        end
-
-        local function run_java_test_method(debug)
-          local _, build_tool = is_multi_module()
-          build_tool = build_tool or "maven"
-
-          -- Try to get method name using LSP or treesitter
-          local method_name = vim.fn.expand("<cword>")
-          local class_name = vim.fn.expand("%:t:r")
-          local full_test_name = class_name .. "#" .. method_name
-
-          vim.cmd("term " .. get_test_runner(full_test_name, debug, build_tool))
-        end
-
-        local function run_java_test_class(debug)
-          local _, build_tool = is_multi_module()
-          build_tool = build_tool or "maven"
-
-          local class_name = vim.fn.expand("%:t:r")
-          vim.cmd("term " .. get_test_runner(class_name, debug, build_tool))
-        end
 
         -- Detect if project is multi-module
         local function is_multi_module()
@@ -343,6 +302,7 @@ return {
 
         local function get_spring_boot_runner(module, profile, debug, build_tool)
           local cmd = ""
+          local root_dir = vim.fn.getcwd()
 
           if build_tool == "gradle" then
             local module_prefix = module and (":" .. module .. ":") or ":"
@@ -354,7 +314,7 @@ return {
                 .. module_prefix
                 .. "bootRun "
                 .. profile_args
-                .. " -Dorg.gradle.debug=false -Dspring-boot.run.jvmArguments=\"-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005\""
+                .. ' -Dorg.gradle.debug=false -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"'
             else
               cmd = "./gradlew "
                 .. module_prefix
@@ -363,27 +323,38 @@ return {
             end
           else
             -- Maven
-            local module_param = module and ("-pl " .. module .. " -am ") or ""
-
-            if debug then
-              -- suspend=n means the app will start immediately without waiting for debugger
-              -- fork=false is important for JVM args to work properly
-              -- Using port 5005 (standard Java debug port) to avoid conflict with app port
-              cmd = "mvn "
-                .. module_param
-                .. "spring-boot:run -Dspring-boot.run.fork=false "
-                .. (profile and ("-Dspring-boot.run.profiles=" .. profile .. " ") or "")
-                .. '-Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"'
+            if module then
+              -- For multi-module projects, cd into the module directory
+              -- This ensures Maven can find the Spring Boot application in that specific module
+              cmd = "cd " .. vim.fn.shellescape(root_dir .. "/" .. module) .. " && mvn spring-boot:run"
+              if profile and profile ~= "" then
+                cmd = cmd .. " -Dspring-boot.run.profiles=" .. profile
+              end
+              if debug then
+                -- suspend=n means the app will start immediately without waiting for debugger
+                -- fork=false is important for JVM args to work properly
+                -- Using port 5005 (standard Java debug port) to avoid conflict with app port
+                cmd = cmd
+                  .. ' -Dspring-boot.run.fork=false -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"'
+              end
             else
-              cmd = "mvn "
-                .. module_param
-                .. "spring-boot:run"
-                .. (profile and (" -Dspring-boot.run.profiles=" .. profile) or "")
+              -- Single module project - run from root
+              cmd = "mvn spring-boot:run"
+              if profile and profile ~= "" then
+                cmd = cmd .. " -Dspring-boot.run.profiles=" .. profile
+              end
+              if debug then
+                cmd = cmd
+                  .. ' -Dspring-boot.run.fork=false -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"'
+              end
             end
           end
 
           return cmd
         end
+
+        -- Track running Spring Boot terminals
+        local running_terminals = {}
 
         local function run_spring_boot(debug)
           local is_multi, build_tool = is_multi_module()
@@ -405,8 +376,26 @@ return {
             else
               -- Non-debug mode: use terminal
               local cmd = get_spring_boot_runner(module, profile, false, build_tool)
+              local terminal_name = module and ("SpringBoot[" .. module .. "]") or "SpringBoot"
+
               vim.notify("Running: " .. cmd, vim.log.levels.INFO)
+
+              -- Create a new terminal with a specific name
               vim.cmd("15sp|term " .. cmd)
+
+              -- Set terminal buffer name for easy identification
+              local term_bufnr = vim.api.nvim_get_current_buf()
+              vim.api.nvim_buf_set_name(term_bufnr, terminal_name)
+
+              -- Track this terminal
+              running_terminals[module or "default"] = {
+                bufnr = term_bufnr,
+                name = terminal_name,
+                profile = profile,
+              }
+
+              -- Return to previous window
+              vim.cmd("wincmd p")
             end
           end
 
@@ -444,30 +433,210 @@ return {
           end
         end
 
-        -- Keymaps for Java testing and Spring Boot
-        vim.keymap.set("n", "<leader>Tm", function()
-          run_java_test_method()
-        end, { buffer = bufnr, desc = "Run Java test method" })
+        -- Function to toggle a Spring Boot terminal
+        local function toggle_spring_boot_terminal()
+          local active_terminals = {}
 
-        vim.keymap.set("n", "<leader>TM", function()
-          run_java_test_method(true)
-        end, { buffer = bufnr, desc = "Debug Java test method" })
+          for module, terminal_info in pairs(running_terminals) do
+            -- Check if buffer still exists
+            if vim.api.nvim_buf_is_valid(terminal_info.bufnr) then
+              table.insert(active_terminals, {
+                module = module,
+                name = terminal_info.name,
+                bufnr = terminal_info.bufnr,
+                profile = terminal_info.profile,
+                winid = terminal_info.winid,
+              })
+            else
+              -- Clean up invalid terminals
+              running_terminals[module] = nil
+            end
+          end
 
-        vim.keymap.set("n", "<leader>Tc", function()
-          run_java_test_class()
-        end, { buffer = bufnr, desc = "Run Java test class" })
+          if #active_terminals == 0 then
+            vim.notify("No Spring Boot terminals running", vim.log.levels.INFO)
+            return
+          end
 
-        vim.keymap.set("n", "<leader>TC", function()
-          run_java_test_class(true)
-        end, { buffer = bufnr, desc = "Debug Java test class" })
+          -- Show list of running terminals
+          local items = {}
+          for _, term in ipairs(active_terminals) do
+            local display = term.name
+            if term.profile then
+              display = display .. " [" .. term.profile .. "]"
+            end
 
-        vim.keymap.set("n", "<F9>", function()
+            -- Check if terminal is currently visible
+            local is_visible = false
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+              if vim.api.nvim_win_get_buf(win) == term.bufnr then
+                is_visible = true
+                break
+              end
+            end
+
+            if is_visible then
+              display = "✓ " .. display
+            else
+              display = "  " .. display
+            end
+
+            table.insert(items, display)
+          end
+
+          vim.ui.select(items, {
+            prompt = "Toggle Spring Boot terminal (✓ = visible):",
+            format_item = function(item)
+              return item
+            end,
+          }, function(choice, idx)
+            if choice and idx then
+              local selected = active_terminals[idx]
+
+              -- Check if terminal is currently visible
+              local visible_win = nil
+              for _, win in ipairs(vim.api.nvim_list_wins()) do
+                if vim.api.nvim_win_get_buf(win) == selected.bufnr then
+                  visible_win = win
+                  break
+                end
+              end
+
+              if visible_win then
+                -- Terminal is visible, close it
+                vim.api.nvim_win_close(visible_win, false)
+              else
+                -- Terminal is hidden, open it
+                vim.cmd("15sp|buffer " .. selected.bufnr)
+                local new_win = vim.api.nvim_get_current_win()
+                running_terminals[selected.module].winid = new_win
+              end
+            end
+          end)
+        end
+
+        -- Function to list running Spring Boot terminals
+        local function list_spring_boot_terminals()
+          local active_terminals = {}
+
+          for module, terminal_info in pairs(running_terminals) do
+            -- Check if buffer still exists
+            if vim.api.nvim_buf_is_valid(terminal_info.bufnr) then
+              table.insert(active_terminals, {
+                module = module,
+                name = terminal_info.name,
+                bufnr = terminal_info.bufnr,
+                profile = terminal_info.profile,
+              })
+            else
+              -- Clean up invalid terminals
+              running_terminals[module] = nil
+            end
+          end
+
+          if #active_terminals == 0 then
+            vim.notify("No Spring Boot terminals running", vim.log.levels.INFO)
+            return
+          end
+
+          -- Show list of running terminals
+          local items = {}
+          for _, term in ipairs(active_terminals) do
+            local display = term.name
+            if term.profile then
+              display = display .. " [" .. term.profile .. "]"
+            end
+            table.insert(items, display)
+          end
+
+          vim.ui.select(items, {
+            prompt = "Running Spring Boot terminals:",
+            format_item = function(item)
+              return item
+            end,
+          }, function(choice, idx)
+            if choice and idx then
+              local selected = active_terminals[idx]
+              -- Focus on the selected terminal
+              for _, win in ipairs(vim.api.nvim_list_wins()) do
+                if vim.api.nvim_win_get_buf(win) == selected.bufnr then
+                  vim.api.nvim_set_current_win(win)
+                  return
+                end
+              end
+              -- If terminal window is not visible, open it
+              vim.cmd("15sp|buffer " .. selected.bufnr)
+            end
+          end)
+        end
+
+        -- Function to stop a running Spring Boot terminal
+        local function stop_spring_boot_terminal()
+          local active_terminals = {}
+
+          for module, terminal_info in pairs(running_terminals) do
+            if vim.api.nvim_buf_is_valid(terminal_info.bufnr) then
+              table.insert(active_terminals, {
+                module = module,
+                name = terminal_info.name,
+                bufnr = terminal_info.bufnr,
+                profile = terminal_info.profile,
+              })
+            else
+              running_terminals[module] = nil
+            end
+          end
+
+          if #active_terminals == 0 then
+            vim.notify("No Spring Boot terminals running", vim.log.levels.INFO)
+            return
+          end
+
+          -- Show list to stop
+          local items = {}
+          for _, term in ipairs(active_terminals) do
+            local display = term.name
+            if term.profile then
+              display = display .. " [" .. term.profile .. "]"
+            end
+            table.insert(items, display)
+          end
+
+          vim.ui.select(items, {
+            prompt = "Select terminal to stop:",
+            format_item = function(item)
+              return item
+            end,
+          }, function(choice, idx)
+            if choice and idx then
+              local selected = active_terminals[idx]
+              -- Delete the terminal buffer
+              vim.api.nvim_buf_delete(selected.bufnr, { force = true })
+              running_terminals[selected.module] = nil
+              vim.notify("Stopped: " .. selected.name, vim.log.levels.INFO)
+            end
+          end)
+        end
+
+        vim.api.nvim_create_user_command("JavaSpringBootRun", function()
           run_spring_boot()
-        end, { buffer = bufnr, desc = "Run Spring Boot" })
+        end, { desc = "Run Spring Boot application" })
 
-        vim.keymap.set("n", "<F10>", function()
+        vim.api.nvim_create_user_command("JavaSpringBootDebug", function()
           run_spring_boot(true)
-        end, { buffer = bufnr, desc = "Debug Spring Boot" })
+        end, { desc = "Debug Spring Boot application" })
+
+        vim.api.nvim_create_user_command("JavaSpringBootToggle", function()
+          toggle_spring_boot_terminal()
+        end, { desc = "Toggle Spring Boot terminal visibility" })
+
+        vim.api.nvim_create_user_command("JavaSpringBootList", function()
+          list_spring_boot_terminals()
+        end, { desc = "List running Spring Boot terminals" })
+
+        vim.api.nvim_create_user_command("JavaSpringBootStop", function()
+          stop_spring_boot_terminal()
+        end, { desc = "Stop a Spring Boot terminal" })
       end
 
       return opts
