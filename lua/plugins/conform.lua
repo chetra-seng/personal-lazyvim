@@ -46,7 +46,8 @@ return {
 
     opts.formatters.biome = {
       args = {
-        "format",
+        "check",
+        "--write",
         "--jsx-quote-style",
         "double",
         "--javascript-formatter-quote-style",
