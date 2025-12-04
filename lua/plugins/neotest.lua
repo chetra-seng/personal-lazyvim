@@ -10,6 +10,7 @@ return {
     local neotest_golang_opts = {} -- Specify custom configuration
     require("neotest").setup({
       adapters = {
+        require("neotest-vitest")({}),
         require("neotest-golang")(neotest_golang_opts), -- Registration
         require("neotest-playwright").adapter({
           options = {
